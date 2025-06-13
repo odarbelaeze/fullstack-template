@@ -1,0 +1,15 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  api-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ruff without running check or format
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "--version"
+      - name: Run ruff check
+        run: cd api && ruff check
+      - name: Run ruff format
+        run: cd api && ruff format --check
