@@ -1,9 +1,12 @@
 # Install uv
-FROM python:3.12-slim
-COPY --from=ghcr.io/astral-sh/uv:0.5.13 /uv /uvx /bin/
+FROM python:3.12-alpine
+COPY --from=ghcr.io/astral-sh/uv:0.5.13-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
 
 # Change the working directory to the `app` directory
 WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache curl
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \

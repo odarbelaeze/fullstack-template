@@ -10,9 +10,9 @@ services:
           path: ./proxy/nginx.conf
     depends_on:
       ui:
-        condition: service_started
+        condition: service_healthy
       api:
-        condition: service_started
+        condition: service_healthy
 
   ui:
     build: ./ui
@@ -24,6 +24,11 @@ services:
           target: /app/src
         - action: rebuild
           path: ./ui/package.json
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   api:
     build: ./api
@@ -52,10 +57,9 @@ services:
       migrator:
         condition: service_completed_successfully
     environment:
-      PYTHONPATH: "./src/"
       EXAMPLE_DB_DSN: "postgresql://user:password@db/example?sslmode=disable"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/ping || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/ping/ || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -78,6 +82,7 @@ services:
     image: "migrate/migrate:v4.18.1"
     command:
       [
+        "-verbose",
         "-path",
         "/migrations",
         "-database",

@@ -1,7 +1,10 @@
-FROM node:20.18-slim
+FROM node:20.18-alpine
 
 # Change the working directory to the `app` directory
 WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache curl
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.npm \
