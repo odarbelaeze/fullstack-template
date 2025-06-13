@@ -5,6 +5,8 @@ jobs:
   api-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Install ruff without running check or format
         uses: astral-sh/ruff-action@v3
         with:
