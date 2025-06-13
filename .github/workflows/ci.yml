@@ -48,6 +48,8 @@ jobs:
         run: cd ui && npm ci
       - name: Run lint
         run: cd ui && npm run lint
+      - name: Run prettier
+        run: cd ui && npx prettier --check .
 
   ui-build:
     runs-on: ubuntu-latest
