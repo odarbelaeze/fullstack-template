@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  api-check:
+  api-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,3 +19,19 @@ jobs:
         run: cd api && ruff check
       - name: Run ruff format
         run: cd api && ruff format --check
+
+  api-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "api/pyproject.toml"
+      - name: Install dependencies
+        run: cd api && uv sync --frozen
+      - name: Build the app
+        run: cd api && uv build
